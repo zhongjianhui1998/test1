@@ -1,0 +1,122 @@
+				redis 命令大全解释
+一·String（字符串）
+ 1.set name aaaaa 创建一个值为aaaaa的name的字段
+ 2.get name 查看name的值
+ 3.append name aa 把aa添加到name值的后面
+ 4.decr age 减一
+ 5.decrby age 4 减自定义的
+ 6.getrange name 5 8 取值范围
+ 7.getset name bbb 显示旧值 添加新值，如果没值显示nil,添加不影响
+ 8.incr age 加一
+ 9.incrby age 5 加自定义的值
+10.incrbyfloat age 6.7 加自定义的小数
+11.mget namg age 查询多个
+12.mset name aa age 23 添加多个
+13.msetnx name aa age 34 如果里面有相同的字段添加失败0 成功1
+14.psetex name 10000 aa 十秒内有效，这是用毫秒做单位的
+15.setex name 10 AA 十秒内有效，这是用秒做单位的
+16.setnx name bb 只有name 不存在是才能创建成功1 失败0 存在是不做任何处理
+17.setrange name 2 aaaaaa 从下标2开始用aaaaaaa替换
+18.strlen name 查询长度
+
+
+二·Key（键）
+ 1.del name 删除
+ 2.dump name 效验序列化
+ 3.exists name 检查字段是否存在
+ 4.expire name 10 设置过期时间 以秒为单位
+ 5.expireat name 1123345 以时间戳为过期时间
+ 6.keys *n /n* /*n* 模糊查询
+ 7.MIGRATE 127.0.0.1 7777 greeting 0 1000 把自己端口上的一个键迁移到7777端口上
+ 8.move name 1 移动到另一个数据库中 一共十二个 select 1 查询
+ 9.object 不用管
+10.persist name 消除有效时间
+11.pexpire name 设置有效时间 以毫秒为单位
+12.pexpireat name 设置有效时间 以时间戳为单位
+13.pttl name 以毫秒为单位显示有效时间
+14.randomkey 随机显示一个字段
+15.rename name nameaa 将name修改为nameaa
+16.rename name nameaa 当nameaaa已经存在 新建的值会覆盖旧值
+17.renamenx name nameaa 当nameaaa不存在时才能修改
+18.restore 不用管
+19.SORT key 返回键值从小到大排序的结果。 SORT key DESC 返回键值从大到小排序的结果。
+20.ttl name 查询有效剩余时间
+21.type name 查询类型
+22.scan 不用管
+
+
+三·Hash(哈希表）
+ 1.hset test aa bbbbbbbb 将test中的域aa的值设为bbbbbbbb,如果test不存在，会创建一个新的哈希表，如果aa已经存在test里面，旧值会被覆盖
+ 2.hget test aa 查询
+ 3.hgetall test 查询test中所有的域跟域的值 比如：aa
+ 4.hdel test aa 删除test中的aa
+ 5.hexists test aa 查看test中，给定域aa是否存在，存在返回1 不存在放回0
+ 6.hincrby test age 12 自定义往test age中添加
+ 7.hincrbyfloat test age 2.5 自定义往test age中添加小数
+ 8.hkeys test 查询test中域 比如 age
+ 9.hlen test 查询test中域的总数
+10.hmget test age test 查询多个域 比如age test
+11.hmset test age 20 test bb 添加多个 比如 age 32 test AA
+12.hsetnx test age 35 创建一个test哈希表 的age域，假如test存在了age，操作无效
+13.hvals test 查询test哈希表中所有域的值
+
+四·List（列表）
+ 1.lpush test aa 或者 lpust test a b c d 添加一个或者多个
+ 2.lrange test 0 5 查询范围
+ 3.blpop test 2 最左边删除一个
+ 4.brpop test 2 最右边删除一个
+ 5.brpoplpush test aa 3 把最右边的移除到aa里面
+ 6.lindex test 0 根据下标查询0为第一个，-1最后，-1 倒数第二
+ 7.linsert test before b dd 在b前面加入dd
+ 8.llen test 查询长度
+ 9.lpop 移除头元素
+10.lpushx test aa 将aa添加到test头部分
+11.lrem test 2 a 从test第二下标搜索a 并移除 count>0 从头搜索 count<0 从尾搜索 count=0 找出相同的删除
+12.lset test 2 aa 把test 2的更改为aa
+13.ltrim test 0 3 将不再这区域内全部移除
+14.rpop test 删除最后一条数据并且弹出来
+15.rpoplpush 右边删除一条数据 左边添加一条数据
+16.rpush test aa bb cc 将多个值添加到最右边
+17.rpushx test aa bb cc 将多个值添加到最右边但test不存在添加不了
+
+五·Set(集合）
+ 1.sadd test a b c d e 添加 可以添加单个 多个 重复的
+ 2.scard test 查询总数
+ 3.sdiff test 查出集合内容会有序的显示出来
+ 4.sdiffstore jj test test1  就是test - test1相同的 剩下的塞入jj1
+ 5.sinter test 查询集合全部
+ 6.sinterstore jj test test1 把相同的放入jj 1
+ 7.sismember test a 判断test集合中有没有a,有返回1 没有返回0
+ 8.smembers test 查询集合全部
+ 9.smove jj test a 把jj集合中的a移入test集合中 1
+10.spop test 随机一个并且显示出来并且移除他
+11.srandmember test 3 根据参数返回几个随机内容
+12.srem test a b c 移除test一个或者多个元素
+13.sunion jj test 合并显示 1
+14.sunionstore aa jj test 把jj 跟test合并值放在aa里面 1
+
+
+六·SortedSet(有序集合）
+ 1.zadd test 10 a 9 b 添加一个或者多个 假如已存在scoure也就是10 不会变 假如已存在元素，scoure不一样则改变scoure
+ 2.zrange test 0 -1 查出test的值 
+ 3.zrange test 0 -1 withscores 有序的查询 从小到大 排序
+ 4.zcard test 查出数量
+ 5.zcount test 1 10 查出一到十之间的元素总量
+ 6.zincrby test 100 a 加上自定义的scoure 原来是1 加100 就是101
+ 7.zrangebyscore test -inf +inf 在不知道最大值跟最小值的情况下使用这个 后面可以加上withscores 有序的显示 
+ 8.zranygebyscore test ( 2 100  显示大于2 小于100 的值
+ 9.zrank test a 查出在test中的排名
+10.zrem test a 删除test中a 也可以删除多个
+11.zremrangebyrank test 0 2 根据下标移除的范围
+12.zremrangebyscore test 100 200 根据最大值最小值移除范围
+13.zrevrange test 0 -1 withscores 有序的查询 从大到小 排序
+14.zrevrangebyscore test 100 200 根据最大值最小值的范围排序
+15.zrevrank test a 从大到小排序查出a下标
+16.zscore test a 根据a查出它的score 也就是给的数字
+17.zunionstore aa1 test test 把test test1 的值塞入aa1中 1
+18.zinterstore aa1 test test 把test test1的值塞入AA1中 但aa1中scoure的值是test test1相加所得 1
+
+七·Pub/Sub(发布/订阅)
+ 1.psubscribe guangdong 订阅
+ 2.publish aaaaaa 发布
+
